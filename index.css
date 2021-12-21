@@ -1,0 +1,11 @@
+textarea {
+    overflow-y: scroll;
+    resize: none;
+    min-height: 85vh;
+    min-width: 99%;
+  }
+  
+  html,
+  body {
+    background-color: lightgray;
+  }
