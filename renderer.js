@@ -67,12 +67,12 @@ wss.on('connection', (websocketConnection) => {
           const msa = slice.replace(CR, '\n').replace(FS, '');
           msaArray.push(msa);
           const ackSegment = msa.match(/(?<=MSA\|).*/g);
-					if (ackSegment) {
-						const ackCodeAndIndexPuit = ackSegment[0].split('|');
-						const [ackCode, indexPuit] = ackCodeAndIndexPuit;
-						wellsAckHash[indexPuit] = ackCode;
-					}
-        })		
+          if (ackSegment) {
+            const ackCodeAndIndexPuit = ackSegment[0].split('|');
+            const [ackCode, indexPuit] = ackCodeAndIndexPuit;
+            wellsAckHash[indexPuit] = ackCode;
+          }
+        })
 				
         const missingAck = wellsAckHash.some((well) => well === null)
 				
