@@ -27,6 +27,7 @@ document.getElementById("clear-button").addEventListener("click", clearConsole);
 // websocket server for frontend
 wss.on('connection', (websocketConnection) => {
 	msaArray = [];
+  addConsoleEntry('New connection on port 9898');
   websocketConnection.on('message', (message) => {
     const parsedMessage = JSON.parse(message);
     const { header, payload } = parsedMessage;
