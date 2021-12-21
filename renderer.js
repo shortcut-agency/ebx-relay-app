@@ -13,6 +13,10 @@ function clearConsole() {
   document.querySelector('#console').innerHTML = consoleText;
 }
 
+window.addEventListener('DOMContentLoaded', (event) => {
+  document.getElementById("clear-button").addEventListener("click", clearConsole);
+});
+
 function addConsoleEntry(message) {
   consoleText += `\n${message}`;
   document.querySelector('#console').innerHTML = consoleText;
@@ -22,7 +26,6 @@ const wss = new ws.WebSocketServer({ port: 9898 });
 
 addConsoleEntry('Listening on port 9898');
 
-document.getElementById("clear-button").addEventListener("click", clearConsole);
 
 // websocket server for frontend
 wss.on('connection', (websocketConnection) => {
