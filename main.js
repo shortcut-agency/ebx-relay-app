@@ -1,7 +1,7 @@
 const { app, BrowserWindow, shell, autoUpdater, dialog } = require('electron')
 const path = require('path')
-const server = 'https://your-deployment-url.com'
-const url = `${server}/update/${process.platform}/${app.getVersion()}`
+const server = 'https://update.electronjs.org'
+const feed = `${server}/LucasLiaoR/ebx-relay-app/${process.platform}-${process.arch}/${app.getVersion()}`
 
 // Open through URL custom protocol handler
 if (process.defaultApp) {
@@ -51,11 +51,11 @@ app.on('window-all-closed', () => {
 })
 
 // UPDATER 
-autoUpdater.setFeedURL({ url })
+autoUpdater.setFeedURL(feed)
 
 setInterval(() => {
   autoUpdater.checkForUpdates()
-}, 60000)
+}, 10 * 60 * 1000)
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const dialogOpts = {
