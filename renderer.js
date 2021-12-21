@@ -63,29 +63,29 @@ wss.on('connection', (websocketConnection) => {
         const ansData = data.toString();
 				const splittedAck = ansData.split(VT);
 
-				splittedAck.forEach((slice) => {
-					const msa = slice.replace(CR, '\n').replace(FS, '');
-					msaArray.push(msa);
-					const ackSegment = msa.match(/(?<=MSA\|).*/g);
-					if (ackSegment) {
-						const ackCodeAndIndexPuit = ackSegment[0].split('|');
-						const [ackCode, indexPuit] = ackCodeAndIndexPuit;
-						wellsAckHash[indexPuit] = ackCode;
-					}
-				})			
+        splittedAck.forEach((slice) => {
+          const msa = slice.replace(CR, '\n').replace(FS, '');
+          msaArray.push(msa);
+          const ackSegment = msa.match(/(?<=MSA\|).*/g);
+          if (ackSegment) {
+            const ackCodeAndIndexPuit = ackSegment[0].split('|');
+            const [ackCode, indexPuit] = ackCodeAndIndexPuit;
+            wellsAckHash[indexPuit] = ackCode;
+          }
+        })
 				
-				const missingAck = wellsAckHash.some((well) => well === null)
+        const missingAck = wellsAckHash.some((well) => well === null)
 				
-				if (!missingAck) {
-					addConsoleEntry(`HL7 answer data: all messages have been received`);
-					websocketConnection.send(JSON.stringify({
+        if (!missingAck) {
+          addConsoleEntry(`HL7 answer data: all messages have been received`);
+          websocketConnection.send(JSON.stringify({
             header: 'ackResponse',
             payload: {
-							wellAckList: wellsAckHash,
-							msaArray: msaArray.filter((msa) => msa && msa !== ''),
+              wellAckList: wellsAckHash,
+              msaArray: msaArray.filter((msa) => msa && msa !== ''),
             }
-        	}));
-					client.end();
+          }));
+          client.end();
 				}
       });
       client.on('error', (err) => {
