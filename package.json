@@ -1,12 +1,15 @@
 {
-  "name": "relai",
-  "version": "1.0.0",
+  "name": "relay_app",
+  "version": "1.0.1",
   "description": "",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "publish": "electron-builder --mac --win -p always"
   },
   "author": "",
   "license": "ISC",
@@ -16,11 +19,28 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.61",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
     "@electron-forge/maker-zip": "^6.0.0-beta.61",
-    "electron": "^16.0.4"
+    "electron": "^16.0.4",
+    "electron-builder": "^22.14.5"
+  },
+  "build": {
+    "appId": "com.sc.app",
+    "productName": "Relay app",
+    "target": "NSIS",
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "shortcut-agency",
+        "repo": "ebx-relay-app"
+      }
+    ]
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "update-electron-app": "^2.0.1",
+    "electron-updater": "^4.6.1",
     "ws": "^8.3.0"
   },
   "config": {

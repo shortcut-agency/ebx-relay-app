@@ -1,6 +1,8 @@
-const { app, BrowserWindow, shell, autoUpdater } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
+const { autoUpdater } = require('electron-updater')
 const path = require('path')
 
+// Custom protocol registering (File open with url)
 if (process.defaultApp) {
 	if (process.argv.length >= 2) {
 		app.setAsDefaultProtocolClient('hl7-relay-app', process.execPath, [path.resolve(process.argv[1])])
@@ -9,8 +11,12 @@ if (process.defaultApp) {
 	app.setAsDefaultProtocolClient('hl7-relay-app')
 }
 
+
+let mainWindow = null;
+
+// App windows create
 const createWindow = () => {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -21,27 +27,34 @@ const createWindow = () => {
     }
   })
 
+  mainWindow.on('closed', function() {
+    mainWindow = null;
+  });
+
+  
   mainWindow.loadFile('index.html')
-
+  mainWindow.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
 }
 
-const gotTheLock = app.requestSingleInstanceLock()
-
-if (!gotTheLock) {
-  app.quit()
-} else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore()
-      mainWindow.focus()
-    }
-  })
-
-  app.whenReady().then(() => {
-    createWindow()
-  })
-}
+app.whenReady().then(() => {
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
-  if (process.platform === 'darwin') app.quit()
+  app.quit()
 })
+
+
+// UPDATER
+autoUpdater.on('update-available', () => {
+  mainWindow.webContents.send('update_available');
+});
+autoUpdater.on('update-downloaded', () => {
+  mainWindow.webContents.send('update_downloaded');
+});
+
+ipcMain.on('restart_app', () => {
+  autoUpdater.quitAndInstall();
+});
