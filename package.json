@@ -9,7 +9,8 @@
     "make": "electron-forge make",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "publish": "electron-builder --win -p always"
+    "publish-win": "electron-builder --win -p always",
+    "publish-linux": "electron-builder --linux -p always"
   },
   "author": "",
   "license": "ISC",
