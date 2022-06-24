@@ -66,7 +66,7 @@ if (latestVersionInstalled) {
           }
         }));
       } else if (header === 'hl7data') {
-        addConsoleEntry('Data received from front')
+        addConsoleEntry("New segments received...\n")
       
         const { port, ipAdress, data, wellList } = payload;
   
@@ -81,11 +81,12 @@ if (latestVersionInstalled) {
   
         // client for hl7 receiver server
         const client = net.createConnection(clientOptions, () => {
-          addConsoleEntry(`connected to HL7 server!`);
+          addConsoleEntry("Connected to HL7 server! ...Transmitting\n");
           data.forEach(wellData => {
             client.write(buffer.Buffer.from(wellData, encoding = 'utf8'));
           })
         });
+
         client.on('data', (data) => {
           const ansData = data.toString();
           const splittedAck = ansData.split(VT);
@@ -100,11 +101,11 @@ if (latestVersionInstalled) {
               wellsAckHash[indexPuit] = ackCode;
             }
           })
-          
-          const missingAck = wellsAckHash.some((well) => well === null)
-          
+
+          // wait for all ACKs to close connection
+          const missingAck = Object.values(wellsAckHash).some((well) => well === null)
           if (!missingAck) {
-            addConsoleEntry(`HL7 answer data: all messages have been received`);
+            addConsoleEntry('HL7 answer data: all messages have been received');
             websocketConnection.send(JSON.stringify({
               header: 'ackResponse',
               payload: {
